@@ -1,10 +1,62 @@
-canvas{
-  border: 1px solid black;
-  background-color: beige;
- 
+body{
+/*   display: normal; */
+  margin: 0;
+    background: url(/img/bg10.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
-body{
-  display: normal;
-  margin: 0;
+.gameContainer{
+  width: 100%;
+  text-align: center;
+}
+
+
+#game{
+display: block;
+  
+/*     
+  border: 20px solid;
+  border-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(97,97,103,1) 35%, rgba(148,167,171,1) 100%);
+  border-image-slice: 1;
+  color: white;
+  margin: 0 auto; */
+
+  
+ 
+}
+.gcontrols{
+  position: absolute;
+  width: 100%;
+}
+.container{
+  width: 100%;
+  display: inline;
+}
+.glow {
+  position: relative;
+  float: left;
+  font-size: 80px;
+  color: #3366ff;
+  text-align: center;
+  -webkit-animation: glow .3s ease-in-out infinite alternate;
+  -moz-animation: glow .3s ease-in-out infinite alternate;
+  animation: glow .3s ease-in-out infinite alternate;
+  margin-left: 15%;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #0073e6, 0 0 40px #0073e6, 0 0 50px #0073e6, 0 0 60px #0073e6, 0 0 70px #0073e6;
+  }
+  
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ffb770, 0 0 40px #ffb770, 0 0 50px #ffb770, 0 0 60px #ffb770, 0 0 70px #ffb770, 0 0 80px #ffb770;
+  }
+}
+#instructions{
+  position:absolute;
+  bottom: 5%;
 }

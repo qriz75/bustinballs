@@ -12,7 +12,20 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.welcome');
+});
+
+Route::get('/game', function () {
+    return view('pages.game');
+});
+Route::get('/settings', function () {
+    return view('pages.settings');
+});
+Route::get('/highscores', function () {
+    return view('pages.highscores');
+});
+Route::get('/instructions', function () {
+    return view('pages.instructions');
 });
 
 Auth::routes();
