@@ -30,12 +30,14 @@ display: block;
 .gcontrols{
   position: absolute;
   width: 100%;
+  top: 1%;
 }
 .container{
   width: 100%;
   display: inline;
 }
 .glow {
+  
   position: relative;
   float: left;
   font-size: 80px;
@@ -59,4 +61,41 @@ display: block;
 #instructions{
   position:absolute;
   bottom: 5%;
+}
+
+
+
+
+.gamelabel{
+  position: absolute;
+  float:left
+}
+
+#time{
+  position: absolute;  
+  left: 15%;
+}
+
+#lvl{
+   position: absolute;
+  top: 1%;
+  left: 34%; 
+}
+
+#pts{
+    position: absolute;
+  top: 1%;
+  left: 50%;
+}
+
+#pom{
+   position: absolute;
+  top: 1%;
+  left:65%; 
+}
+
+#bls{
+   position: absolute;
+  top: 1%;
+  left: 85%; 
 }
