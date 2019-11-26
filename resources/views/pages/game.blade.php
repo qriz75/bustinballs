@@ -1,4 +1,5 @@
 @extends('layouts.game-layout') @section('content')
+<div id="gameContainer"><canvas id="game"></canvas></div>
 <div class="gcontrols">
  
     
@@ -11,7 +12,7 @@
     
     
       
-        <div class="glow" id="timer">60</div>
+        <div class="glow" id="timer">10</div>
      
         <div class="glow" id="level">-</div>
      
@@ -26,6 +27,8 @@
 <audio id="discosound" src="/assets/disco.mp3" preload="auto">
   <source  type="audio/mpeg">
 </audio>
+
+<audio id="pop" src="/assets/sounds/pop.mp3"></audio>
 <p id="instructions">
   Shift + P --> Party Mode
 </p>

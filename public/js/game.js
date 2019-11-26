@@ -1,5 +1,8 @@
 // A $( document ).ready() block.
 $(document).ready(function() {
+ 
+ 
+  
   //canvas variable
   var canvas = document.querySelector('canvas');
   //setting the canvas to use up all the screen space
@@ -28,7 +31,7 @@ $(document).ready(function() {
   //sound
   var pop = new Audio('/assets/sounds/pop.mp3')
   var miss = new Audio('/assets/sounds/miss.mp3')
-  var game_over = new Audio('/assets/sounds/game_over.mp3')
+  
   var level = 1;
   var ballcount = 0;
   // an array to hold the circles
@@ -45,38 +48,7 @@ $(document).ready(function() {
   var maxRadius = 100;
   var minRadius = 10;
   //a palette of colors for the circles
-//   var colorArray = [
-//     '#000000',
-//     '#FF0000',
-//     '#800000',
-//     '#FFFF00',
-//     '#808000',
-//     '#00FF00',
-//     '#008000',
-//     '#00FFFF',
-//     '#008080',
-//     '#0000FF',
-//     '#000080',
-//     '#FF00FF',
-//     '#800080'
-//   ];
 
-//     var colorPoints = {
-//      '#000000': 1,
-//      '#FF0000': 2,
-//      '#800000': 3,
-//      '#FFFF00': 4,
-//      '#808000': 5,
-//      '#00FF00': 6,
-//      '#008000': 7,
-//      '#00FFFF': 8,
-//      '#008080': 9,
-//      '#0000FF': 10,
-//      '#000080': 11,
-//      '#FF00FF': 12,
-//      '#800080': 13
-//     };
-  
   var colorObjArray = [{color: '#000000', points: 1},
                        {color: '#FF0000', points: 2},
                        {color: '#800000', points: 3},
@@ -104,14 +76,8 @@ $(document).ready(function() {
     canvas.height = window.innerHeight;
     init();
   })
-  // mouse click
-  window.addEventListener('click', function(event) {
-    click.cx = event.x;
-    click.cy = event.y;
-    //console.log(click.cx, " | ", event.x, " | ", click.cy, " | ", event.y)
-
-
-    window.addEventListener('keydown', function(e) {
+  
+  window.addEventListener('keydown', function(e) {
       //var key = e.key;
       if (e.key === "Escape") // ESC key
       {
@@ -119,24 +85,33 @@ $(document).ready(function() {
         alert("paused");
       }
     })
-
+  
+  
+  // mouse click
+  window.addEventListener('click', function(event) {
+    click.cx = event.x;
+    click.cy = event.y;
+    //console.log(click.cx, " | ", event.x, " | ", click.cy, " | ", event.y)
 
     //which circle
     var which;
     if ((which = circleArray.indexOf(hoveredCircle)) != -1) {
       circleArray.splice(which, 1);
+     
       ballcount = ballcount - 1;
       total = total + points;
       $('#ballct').trigger('contentchanged');
       $('#points').trigger('pointschanged');
-          
-      pop.play();
+         pop.play();
+       
+     
     } else {
       //console.log('missed');
       miss.play();
       penalty();
     }
   })
+  
   //Circle object
   function Circle(x, y, dx, dy, radius) {
     //coordinates
@@ -272,51 +247,7 @@ $(document).ready(function() {
   function updatePoints() {
     $('#points').trigger('pointschanged');
   }
-  
-//   function getPoints() {
 
-//       switch (this.fillcolor) {
-//         case '#000000':
-//           this.points = 1;
-//           break;
-//         case '#FF0000':
-//           this.points = 2;
-//           break;
-//         case '#800000':
-//           this.points = 3;
-//           break;
-//         case '#FFFF00':
-//           this.points = 4;
-//           break;
-//         case '#808000':
-//           this.points = 5;
-//           break;
-//         case '#00FF00':
-//           this.points = 6;
-//           break;
-//         case '#008000':
-//           this.points = 7;
-//           break;
-//         case '#00FFFF':
-//           this.points = 8;
-//           break;
-//         case '#008080':
-//           this.points = 9;
-//           break;
-//         case '#0000FF':
-//           this.points = 10;
-//           break;
-//         case '#000080':
-//           this.points = 11;
-//           break;
-//         case '#FF00FF':
-//           this.points = 12;
-//           break;
-//         case '#800080':
-//           this.points = 13;
-//           break;
-//       }
-//     }
   
   function search(fillColor, colorObjArray){
     for (var i=0; i < colorObjArray.length; i++) {

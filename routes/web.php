@@ -27,7 +27,9 @@ Route::get('/highscores', function () {
 Route::get('/instructions', function () {
     return view('pages.instructions');
 });
-
+Route::get('/stats', function () {
+    return view('pages.stats');
+});
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
