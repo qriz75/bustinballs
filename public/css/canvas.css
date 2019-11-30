@@ -1,101 +1,176 @@
-body{
-/*   display: normal; */
-  margin: 0;
-    background: url(/img/bg10.jpg) no-repeat center center fixed; 
+
+
+html,
+body {
+  /*   display: normal; */
+  height: 100%;
+  width: 100%;
+  background: url(/assets/img/bgr/bg10.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  text-align: center;
+  pointer-events: none;
 }
 
-.gameContainer{
+.gameContainer {
+  position: absolute;
+  margin: 0;
+  padding: 0;
   width: 100%;
+  height: 100%;
   text-align: center;
 }
 
-
-#game{
-display: block;
-  
-/*     
+#game {
+  margin: 0;
+  padding: 0;
+  display: block;
+  z-index: 5;
+  pointer-events: auto;
+  /*     
   border: 20px solid;
   border-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(97,97,103,1) 35%, rgba(148,167,171,1) 100%);
   border-image-slice: 1;
   color: white;
   margin: 0 auto; */
+}
 
-  
- 
-}
-.gcontrols{
+.gstats {
   position: absolute;
-  width: 100%;
-  top: 1%;
+  width: 99%;
+  top: 1%;   
+  left 1%;
+  right: 1%
+  text-align: center;
+  
 }
-.container{
+.gcontrols {
+  position: absolute;
+  width: 99%;
+  top: 21%;   
+  left 1%;
+  right: 1%
+  text-align: left;
+  
+}
+
+.container {
   width: 100%;
   display: inline;
 }
+
 .glow {
-  
   position: relative;
-  float: left;
   font-size: 80px;
   color: #3366ff;
   text-align: center;
   -webkit-animation: glow .3s ease-in-out infinite alternate;
   -moz-animation: glow .3s ease-in-out infinite alternate;
   animation: glow .3s ease-in-out infinite alternate;
-  margin-left: 15%;
+  
 }
 
 @-webkit-keyframes glow {
   from {
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #0073e6, 0 0 40px #0073e6, 0 0 50px #0073e6, 0 0 60px #0073e6, 0 0 70px #0073e6;
   }
-  
   to {
     text-shadow: 0 0 20px #fff, 0 0 30px #ffb770, 0 0 40px #ffb770, 0 0 50px #ffb770, 0 0 60px #ffb770, 0 0 70px #ffb770, 0 0 80px #ffb770;
   }
 }
-#instructions{
-  position:absolute;
-  bottom: 5%;
+
+.gamelabel {
+  position: relative;
 }
 
+.statCon {
+  position: relative;
+  text-align: center;
+  margin-left: 4%;
+  margin-right: 4%;
+  border: solid 2px royalblue;
+  border-radius: 5%;
+  background-color: rgba(65,105,225,0.2); /* Blue w/ opacity */
+}
 
+.monitor{
+  position: relative;
+  display: none;
+  margin-left: 4%;
+  margin-right: 4%;
+  border: solid 2px darkgoldenrod;
+  border-radius: 5%;
+  background-color: rgba(255,215,0,0.2); /* Blue w/ opacity */
+  pointer-events: none;
+}
 
+#time {}
 
-.gamelabel{
+#lvl {
+  position: relative;
+}
+
+#pts {
+  position: relative;
+}
+
+#pom {
+  position: relative;
+}
+
+#bls {
+  position: relative;
+}
+
+#clicks {
+  position: relative;
+}
+
+#carlton {
   position: absolute;
-  float:left
+  bottom: 3%;
+  left: 20%;
 }
 
-#time{
-  position: absolute;  
-  left: 15%;
+#jack {
+  position: absolute;
+  bottom: 3%;
+  left: 45%;
 }
 
-#lvl{
-   position: absolute;
-  top: 1%;
-  left: 34%; 
+#girl1 {
+  position: absolute;
+  bottom: 3%;
+  left: 70%;
+  height: 50vh;
 }
-
-#pts{
-    position: absolute;
-  top: 1%;
-  left: 50%;
+#nLC{
+  position: absolute;
+  width: 100%;
+  top: 20%;
+  display: block;
+  z-index: 20;
+  
+  
 }
-
-#pom{
-   position: absolute;
-  top: 1%;
-  left:65%; 
+#nextLvlCon{
+   display: inline-block;
+  width: 85%;
+  z-index: 10; /* Sit on top */
+  padding-top: 5px; /* Location of the box */
+ border-radius: 5%;
+  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
 }
-
-#bls{
-   position: absolute;
-  top: 1%;
-  left: 85%; 
+#nextLvlMod{
+    
+  color: goldenrod;
+  margin: auto;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+}
+#nextBtn{
+  pointer-events: auto;
 }

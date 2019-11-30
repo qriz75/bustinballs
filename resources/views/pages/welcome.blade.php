@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    <img src="/img/bblogo.png" width="85%">
+                    <img src="/assets/img/bblogo.png" width="85%">
                 </div>
 
                 <div class="links">

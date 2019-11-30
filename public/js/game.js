@@ -1,117 +1,324 @@
-// A $( document ).ready() block.
+// A $( document ).ready() block to start running the script immediately
 $(document).ready(function() {
- 
- 
-  
+
+  /*##########  Global Variables ##########*/
+
   //canvas variable
   var canvas = document.querySelector('canvas');
+
   //setting the canvas to use up all the screen space
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+
   //shortcut variable to reduce typing
   var c = canvas.getContext('2d');
+
   //the object to hold the mouse position
   var mouse = {
     mx: undefined,
     my: undefined
   }
+
   //the object to hold the click coordiantes
   var click = {
     cx: undefined,
     cy: undefined
   }
-  // global variables 
 
-  // Game states 
-  var state = ['paused', 'over', 'active']
+  // Game states
+  var status = "active";
   var paused = false;
-  var over = false;
-  // how many circles
-  var count = 10;
+  var running = true;
+
+  //intitial values
+  var initLvl = 1;
+  var initBalls = 5;
+  var initPen = 1;
+
+  // Game stats
+  var level = initLvl;
+  var points = 0;
+  var total = 0;
+  var totalPoints = [];
+  var totalClicks = [];
+  var totalMisses =[];
+
+  //time left
+  var tl = 0;
+
+  //the point values for the balls
+  var bonus = 0;
+  var bp = 0;
+
+  //total points
+  var tp = 0;
+
+  //total clicks
+  var clicks = 0;
+  var tc = 0;
+
+  //timer
+  var time = parseInt($('#timer').html)
+  var refreshInterval = 1000;
+
   //sound
   var pop = new Audio('/assets/sounds/pop.mp3')
   var miss = new Audio('/assets/sounds/miss.mp3')
-  
-  var level = 1;
+  var gameOver = new Audio('/assets/sounds/game_over.mp3')
+  var disco = $('#discosound')[0];
+
+  // how many circles at start
+  var count = initBalls;
   var ballcount = 0;
+  var ball;
+
   // an array to hold the circles
   var circleArray = [];
 
   //how many circles spawn on misclick
-  var penCount = 5;
+  var penCount = initPen;
+
   //marking the circle to be removed
   var hoveredCircle = null;
-  //the point value for the circle
-  var points = 0;
-  var total = 0;
+
   //controlling size of the circles
   var maxRadius = 100;
   var minRadius = 10;
-  //a palette of colors for the circles
 
-  var colorObjArray = [{color: '#000000', points: 1},
-                       {color: '#FF0000', points: 2},
-                       {color: '#800000', points: 3},
-                       {color: '#FFFF00', points: 4},
-                       {color: '#808000', points: 5},
-                       {color: '#00FF00', points: 6},
-                       {color: '#008000', points: 7},
-                       {color: '#00FFFF', points: 8},
-                       {color: '#008080', points: 9},
-                       {color: '#0000FF', points: 10},
-                       {color: '#000080', points: 11},
-                       {color: '#FF00FF', points: 12},
-                       {color: '#800080', points: 13}                      
-                      ];
-  
-  //eventlisteners 
+  //colors and points for the circles
+  var colorObjArray = [{
+      color: '#000000',
+      points: 1
+    },
+    {
+      color: '#FF0000',
+      points: 2
+    },
+    {
+      color: '#800000',
+      points: 3
+    },
+    {
+      color: '#FFFF00',
+      points: 4
+    },
+    {
+      color: '#808000',
+      points: 5
+    },
+    {
+      color: '#00FF00',
+      points: 6
+    },
+    {
+      color: '#008000',
+      points: 7
+    },
+    {
+      color: '#00FFFF',
+      points: 8
+    },
+    {
+      color: '#008080',
+      points: 9
+    },
+    {
+      color: '#0000FF',
+      points: 10
+    },
+    {
+      color: '#000080',
+      points: 11
+    },
+    {
+      color: '#FF00FF',
+      points: 12
+    },
+    {
+      color: '#800080',
+      points: 13
+    }
+  ];
+
+  /*########## Modal related ##########*/
+
+  // Get the modal
+  var nModal = document.getElementById("nextModal");
+
+  // Get the button that closes the modal
+  var nextBtn = document.getElementById("nextBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal 
+  nextBtn.onclick = function() {
+    //nModal.style.display = "none";
+   // nModal.toggle;
+  }
+
+//   // When the user clicks on <span> (x), close the modal
+//   span.onclick = function() {
+//     nModal.style.display = "none";
+//   }
+
+  // When the user clicks anywhere outside of the modal, close it
+//   window.onclick = function(event) {
+//     if (event.target == nModal) {
+//       nModal.style.display = "none";
+//     }
+//   }
+
+  /*########## Eventlisteners ##########*/
+
   //mouse movement
   window.addEventListener('mousemove', function(event) {
-    mouse.mx = event.x;
-    mouse.my = event.y;
-  })
-  //window resize
-  window.addEventListener('resize', function(event) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    init();
-  })
-  
-  window.addEventListener('keydown', function(e) {
-      //var key = e.key;
-      if (e.key === "Escape") // ESC key
-      {
-        togglePause();
-        alert("paused");
-      }
-    })
-  
-  
-  // mouse click
-  window.addEventListener('click', function(event) {
-    click.cx = event.x;
-    click.cy = event.y;
-    //console.log(click.cx, " | ", event.x, " | ", click.cy, " | ", event.y)
+    if (running == true) {
+      mouse.mx = event.x;
+      mouse.my = event.y;
+    }
 
-    //which circle
-    var which;
-    if ((which = circleArray.indexOf(hoveredCircle)) != -1) {
-      circleArray.splice(which, 1);
-     
-      ballcount = ballcount - 1;
-      total = total + points;
-      $('#ballct').trigger('contentchanged');
-      $('#points').trigger('pointschanged');
-         pop.play();
-       
-     
-    } else {
-      //console.log('missed');
-      miss.play();
-      penalty();
+  })
+  //   //window resize
+  //   window.addEventListener('resize', function(event) {
+  //     canvas.width = window.innerWidth;
+  //     canvas.height = window.innerHeight;
+  //     init();
+  //   })
+
+  //Esc key to pause
+  window.addEventListener('keydown', function(e) {
+    //var key = e.key;
+    if (e.key === "Escape") // ESC key
+    {
+      togglePause();
+
     }
   })
   
+    //Esc key to pause
+  window.addEventListener('keydown', function(e) {
+    //var key = e.key;
+    if (e.key === "m") // ESC key
+    {
+      alert("m pressed");
+        toggleModal();
+     
+    }
+  })
+
+  // mouse click
+  window.addEventListener('click', function(event) {
+    if (status == 'active') {
+      click.cx = event.x;
+      click.cy = event.y;
+      clicks = clicks + 1;
+      updateClicks();
+      update_monitor();
+
+      //which circle
+      if (ballcount > 1) {
+        hitOrMiss();
+      } else if (ballcount === 1) {
+        missOrDone();
+      }
+    }
+  })
+
+
+  /*########## Functions ##########*/
+
+  function hitOrMiss() {
+    var which;
+    if ((which = circleArray.indexOf(hoveredCircle)) != -1) {
+      ball = which;
+      hit();
+    } else {
+      //console.log('missed');
+      missed();
+    }
+  }
+
+  function missOrDone() {
+    var which;
+    if ((which = circleArray.indexOf(hoveredCircle)) != -1) {
+      ball = which;
+      hit();
+      complete();
+    } else {
+      //console.log('missed');
+      if (running == true) {
+        missed();
+      }
+    }
+  }
+
+  function hit() {
+    circleArray.splice(ball, 1);
+    ballcount = ballcount - 1;
+    total = total + (points * level);
+    updateBallCt();
+    updatePoints();
+    update_monitor()
+    pop.play();
+
+  }
+
+  function missed() {
+    if (running == true) {
+      miss.play();
+      penalty();
+
+
+    }
+  }
+
+  //function to finish the game
+  function over() {
+    if (time === 0) {
+      toggleActive();
+      clearInterval(refreshInterval);
+      gameOver.play()
+      circleArray = [];
+
+      setTimeout(function() {
+        //window.location.href = "/stats"; //will redirect to the stats page
+      }, 3000); //will call the function after 3 secs.
+    }
+  }
+
+  function complete() {
+    togglePause();
+    clearInterval(refreshInterval);
+    circleArray = [];
+    disco.loop = false;
+    disco.play();
+    $('.discoball').removeAttr('hidden');
+    $('.dance').removeAttr('hidden');
+    update_tl();
+    calcBonus();
+    update_bp();
+    update_tc();
+    update_lvl();
+    update_tp();
+    update_monitor()
+    toggleModal();
+
+
+  }
+
+  function toggleActive() {
+    if (running !== true) {
+      running = true;
+
+      update_monitor()
+    } else {
+      running = false;
+
+      update_monitor()
+    }
+  }
+
   //Circle object
   function Circle(x, y, dx, dy, radius) {
     //coordinates
@@ -127,10 +334,10 @@ $(document).ready(function() {
     this.strokeColor = colorObjArray[Math.floor(Math.random() * colorObjArray.length)].color;
     //value
     this.points = search(this.fillColor, colorObjArray);
-//     getPoints(this.fillColor);
-    
+    //     getPoints(this.fillColor);
 
-    
+
+
 
     //drawing the circle
     this.draw = function() {
@@ -149,7 +356,7 @@ $(document).ready(function() {
     }
     //the update function
     this.update = function() {
-      //these if statements prevent reverse the direction when the circle hits the bordes of the canvas  
+      //these if statements reverse the direction when the circle hits the bordes of the canvas  
       if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
         this.dx = -this.dx;
       }
@@ -199,11 +406,14 @@ $(document).ready(function() {
       //pushing circles into the array
       circleArray.push(new Circle(x, y, dx, dy, radius, points));
       ballcount = ballcount + 1;
-      $('#ballct').trigger('contentchanged');
+      updateBallCt();
+      update_monitor()
     }
   }
   //this function adds more circles to the canvas when the user mis-clicks
   function penalty() {
+
+
     //looping through the array
     for (var i = 0; i < penCount; i++) {
 
@@ -217,12 +427,19 @@ $(document).ready(function() {
       //pushing circles into the array
       circleArray.push(new Circle(x, y, dx, dy, radius));
       ballcount = ballcount + 1;
-      $('#ballct').trigger('contentchanged');
+      updateBallCt();
+      updateLevel();
+      updatePom();
+      update_monitor()
     }
+
   }
+
+
 
   //this function moves the circles
   function animate() {
+
     requestAnimationFrame(animate);
     c.clearRect(0, 0, innerWidth, innerHeight);
 
@@ -238,45 +455,331 @@ $(document).ready(function() {
   function togglePause() {
     if (!paused) {
       paused = true;
-    } else if (paused) {
+      running = false;
+      status = "inactive";
+      //update_state();
+      update_monitor()
+
+    } else if (paused == true) {
       paused = false;
+      running = true;
+      status = 'active';
+      //update_state();
+      update_monitor()
+
     }
 
   }
 
+
+
+
+  function search(fillColor, colorObjArray) {
+    for (var i = 0; i < colorObjArray.length; i++) {
+      if (colorObjArray[i].color === fillColor) {
+        return colorObjArray[i].points;
+      }
+    }
+  }
+
+
+
+
+
+  // Update the display - Points
   function updatePoints() {
-    $('#points').trigger('pointschanged');
+    $('#points').trigger('points-changed');
   }
-
-  
-  function search(fillColor, colorObjArray){
-    for (var i=0; i < colorObjArray.length; i++) {
-        if (colorObjArray[i].color === fillColor) {
-            return colorObjArray[i].points;
-        }
-    }
-} 
-
-  function updateBallCt() {
-    $('#ballct').trigger('contentchanged');
-  }
-
-  $(document).on('pointschanged', '#points', function() {
+  $(document).on('points-changed', '#points', function() {
     // do something after the div content has changed
     $('#points').text(total.toString());
   });
 
 
-
-  $(document).on('contentchanged', '#ballct', function() {
+  // Update the display - Ball Count
+  function updateBallCt() {
+    $('#ballct').trigger('ballct-changed');
+  }
+  $(document).on('ballct-changed', '#ballct', function() {
     // do something after the div content has changed
     $('#ballct').text(ballcount.toString());
   });
 
+  // Update the display - Level
+  function updateLevel() {
+    $('#level').trigger('lvl-changed');
+  }
+  $(document).on('lvl-changed', '#level', function() {
+    // do something after the div content has changed
+    $('#level').text(level.toString());
+  });
 
 
-  init();
+  // Update the display - CLicks
+  function updateClicks() {
+    $('#clicks').trigger('click-changed');
+  }
+  $(document).on('click-changed', '#clicks', function() {
+    // do something after the div content has changed
+    $('#clicks').text(clicks.toString());
+  });
+
+  // Update the display - Penalty Spawn
+  function updatePom() {
+    $('#penaltyct').trigger('pom-changed');
+  }
+  $(document).on('pom-changed', '#penaltyct', function() {
+    // do something after the div content has changed
+    $('#penaltyct').text(penCount.toString());
+  });
+
+  //Update the modal  
+  //Level
+  function update_lvl() {
+    $('#levelNum').trigger('lvlNum-changed');
+  }
+  $(document).on('lvlNum-changed', '#levelNum', function() {
+    // do something after the div content has changed
+    $('#levelNum').text(("Level " + level.toString() + " Completed"));
+  });
+
+  //Time left
+  function update_tl() {
+    $('#tl').trigger('tl-changed');
+  }
+  $(document).on('tl-changed', '#tl', function() {
+    // do something after the div content has changed
+    $('#tl').text((time - 1).toString());
+  });
+
+  //Bonus Points
+  function update_bp() {
+    $('#bp').trigger('bp-changed');
+  }
+  $(document).on('bp-changed', '#bp', function() {
+    // do something after the div content has changed
+    $('#bp').text(bonus.toString());
+  });
+
+  //Total Points
+  function update_tp() {
+    $('#tp').trigger('tp-changed');
+  }
+  $(document).on('tp-changed', '#tp', function() {
+    // do something after the div content has changed
+    $('#tp').text((total + bonus).toString());
+  });
+
+  //Total Clicks
+  function update_tc() {
+    $('#tc').trigger('tc-changed');
+  }
+  $(document).on('tc-changed', '#tc', function() {
+    // do something after the div content has changed
+    $('#tc').text(clicks.toString());
+  });
+
+
+  // Display the Control Values ### Only in Dev Mode ###
+  //Total Clicks
+  function update_monitor() {
+    $('#stateMon').trigger('state-changed');
+  }
+  $(document).on('state-changed', '#stateMon', function() {
+    // do something after the div content has changed
+    $('#stateMon').text("State: --> " + status.toString());
+    $('#runningMon').text("Running: --> " + running.toString());
+    $('#pausedMon').text("Paused: --> " + paused.toString());
+    $('#levelMon').text("Level: --> " + level.toString());
+    $('#countMon').text("Count: --> " + count.toString());
+    $('#pointsMon').text("Points: --> " + points.toString());
+    $('#ballctMon').text("Ball Count: --> " + ballcount.toString());
+    $('#pomMon').text("Penalty: --> " + penCount.toString());
+    $('#clicksMon').text("Clicks: --> " + clicks.toString());
+
+  });
+
+
+
+  function calcBonus() {
+    var temp = 0;
+    bonus = 0;
+    for (i = 0; i < time; i++) {
+      temp = i;
+      bonus = temp + bonus;
+      update_bp();
+    }
+  }
+
+function getReady( parent, callback ){
+  
+  // These are all the text we want to display
+  var texts = ['Ready', 'Set', 'Go!!!'];
+  
+  // This will store the paragraph we are currently displaying
+  var paragraph = null;
+  
+  // Initiate an interval, but store it in a variable so we can remove it later.
+  var interval = setInterval( counting, 1000 );
+  
+  // This is the function we will call every 1000 ms using setInterval
+  
+  function counting(){
+
+    if( paragraph ){
+      
+      // Remove the paragraph if there is one
+      paragraph.remove();
+
+    }
+
+    if( texts.length === 0 ){
+      
+      // If we ran out of text, use the callback to get started
+      // Also, remove the interval
+      // Also, return since we dont want this function to run anymore.
+      clearInterval( interval );
+      callback();
+      toggleModal();
+      startLvl();
+      return;
+
+    }
+  
+    // Get the first item of the array out of the array.
+    // Your array is now one item shorter.
+    var text = texts.shift();
+  
+    // Create a paragraph to add to the DOM
+    // This new paragraph will trigger an animation
+    paragraph = document.createElement("p");
+    paragraph.textContent = text;
+    paragraph.className = text + " nums";
+
+    parent.appendChild( paragraph );
+
+  }
+  
+  
+
+}
+
+// Start a countdown by passing in the parentnode you want to use.
+// Also add a callback, where you start your game.
+getReady( document.getElementById("readyGo"), function(){
+  
+  document.getElementById("readyGo").innerHTML = '<p class="nums"></p>';
+  
+});
+  
+  function timer() {
+    if (running == true)
+      $('#timer').each(function() {
+        time = parseInt($(this).html());
+        if (time !== 0) {
+          $(this).html(time - 1);
+          update_time();
+        } else {
+          over();
+        }
+      });
+  }
+
+  function update_time() {
+    $('#timeMon').trigger('time-changed');
+  }
+  $(document).on('time-changed', '#timeMon', function() {
+    // do something after the div content has changed
+    $('#timeMon').text("Time: --> " + time.toString());
+  });
+
+  // Schedule the update to happen once every second
+  refreshInterval = setInterval(timer, 1000)
+
+  /*########## Instruction Page ##########*/
+
+  function popColorCode() {
+    $.each(circleArray, function(index, value) {
+      console.log(index + ":" + value);
+    });
+  }
+
+
+  //Next Level
+  $("#nextBtn").click(function(event) {
+    event.stopPropagation();
+    level = level + 1;
+    updateLevel();
+    time = 60;
+    $('#timer').html(time);
+    points = 0;
+    updatePoints();
+    penCount = penCount * 2;
+    updatePom();
+    count = count * 2;
+    clicks = 0;
+    updateClicks();
+    disco.pause();
+    update_monitor()
+    $('.discoball').attr('hidden', true);
+    $('.dance').attr('hidden', true);    
+//     $('#nextModal').attr('z-index', -10);
+    refreshInterval = setInterval(timer, 1000);    
+//     $('#nextModal').modal('toggle');
+    toggleModal();
+    startLvl();
+
+  });
+  
+  
+  //Pseudo Modal 
+  function toggleModal(){
+    if($('#nLC').is(":hidden")){
+      $('#nLC').attr('hidden', false);
+    }else if($('#nLC').is(":visible")){
+      $('#nLC').attr('hidden', true);
+    }
+  }
+  
+   //Replay Level
+  $("#replayBtn").click(function() {
+  
+  });
+  
+   //home button
+  $("#homeBtn").click(function() {
+    window.location = '/';
+  });
+
+  
+  
+  function callGetReady(){
+    
+    
+    callFirst(getReady,function(){
+             callAfter(startLvl);
+             });
+  }
+  
+  function startLvl(callback) {
+    
+    updatePom();       
+    init();
+    togglePause();
+    callback();
+  }
+
+
+  //initialize the game
+  getReady();
+  togglePause();
+
+  
+
+
+  //animation call
   animate();
   //console.log('animate function');
   // End of Document Ready Function
+
 });

@@ -23,6 +23,7 @@ $(document).ready(function() {
   function over() {
     if (time === 0) {
       gameOver.play()
+      
       setTimeout(function() {
         window.location.href = "/stats"; //will redirect to the stats page
       }, 3000); //will call the function after 3 secs.

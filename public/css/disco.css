@@ -1,9 +1,9 @@
 .discoball{
   position: fixed;
-  width:100%;
-  height: 100%;
-  right: 25%;
-  left: 54.2%;
+  width:15%;
+  height: 15%;
+/*   right: 25%; */
+  left: 42%;
   top: 15%;
   z-index: -10;
   
@@ -13,7 +13,7 @@
 
 #discoball{
   
-  width: 39%;
+  width: 100%;
   
   
 }
