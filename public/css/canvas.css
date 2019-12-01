@@ -1,5 +1,3 @@
-
-
 html,
 body {
   /*   display: normal; */
@@ -52,7 +50,25 @@ body {
   top: 21%;   
   left 1%;
   right: 1%
-  text-align: left;
+  text-align: left;  
+}
+.discoball{
+  position: fixed;
+  width:15%;
+  height: 15%;
+/*   right: 25%; */
+  left: 42%;
+  top: 15%;
+  z-index: -10;
+  
+  
+  
+}
+
+#discoball{
+  
+  width: 100%;
+  
   
 }
 
@@ -98,9 +114,10 @@ body {
 .monitor{
   position: relative;
   display: none;
+  top: 80%;
   margin-left: 4%;
   margin-right: 4%;
-  border: solid 2px darkgoldenrod;
+  border: solid 1px darkgoldenrod;
   border-radius: 5%;
   background-color: rgba(255,215,0,0.2); /* Blue w/ opacity */
   pointer-events: none;
@@ -146,15 +163,18 @@ body {
   left: 70%;
   height: 50vh;
 }
+
+/* ########## Next Level Modal ##########*/
+
 #nLC{
+  
   position: absolute;
   width: 100%;
-  top: 20%;
+  top: 10%;
   display: block;
-  z-index: 20;
-  
-  
+  z-index: 20;  
 }
+
 #nextLvlCon{
    display: inline-block;
   width: 85%;
@@ -163,14 +183,62 @@ body {
  border-radius: 5%;
   background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
 }
+
 #nextLvlMod{
-    
+  position: block;  
   color: goldenrod;
   margin: auto;
   padding: 5px;
   width: 100%;
   text-align: center;
 }
+
 #nextBtn{
   pointer-events: auto;
 }
+
+#newBtn{
+  pointer-events: auto;
+}
+
+#homeBtn{
+  pointer-events: auto;
+  
+}
+
+/* ########## Game Over Modal ##########*/
+
+#gOC{  
+  position: absolute;
+  width: 100%;
+  top: 10%;
+  display: block;
+  z-index: 20;  
+}
+
+#gameOverCon{
+   display: inline-block;
+  width: 85%;
+  z-index: 10; /* Sit on top */
+  padding-top: 5px; /* Location of the box */
+ border-radius: 5%;
+  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+}
+
+#gameOverMod{
+  position: block;  
+  color: goldenrod;
+  margin: auto;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+}
+
+#gameOverBtn{
+  pointer-events: auto;
+}
+
+
+
+
+

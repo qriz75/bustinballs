@@ -128,10 +128,6 @@ $(document).ready(function() {
     }
   }
 
-
-
-  
-
   //an initialzation function
   function init() {
     //making sure we start with an empty arry when we call the function again
@@ -170,30 +166,3 @@ $(document).ready(function() {
   //console.log('animate function');
   // End of Document Ready Function
 });
-
-
-
-// possibly re-using later
-// c.fillRect(100, 100, 100, 100);
-
-//c.beginPath();
-//c.moveTo(50, 300);
-//c.lineTo(300, 100);
-//c.lineTo(400, 500);
-//c.strokeStyle = " darkgrey";
-//c.stroke();
-
-/*c.beginPath();
-c.arc(300,300, 30, 0, Math.PI * 2, false);
-c.stroke();
-*/
-//   for (var i = 0; i < 200; i++){
-//     var x = Math.random() * window.innerWidth;
-//     var y = Math.random() * window.innerHeight;
-
-//     c.beginPath();
-//     c.arc(x, y, 30, 0, Math.PI * 2, false);
-//     c.strokeStyle = 'blue';
-//     c.stroke();
-
-//   }

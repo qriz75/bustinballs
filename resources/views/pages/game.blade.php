@@ -16,9 +16,9 @@
   </div>
   </div>
   <div class="col-4">
-   <div class="statCon" id=ptsCon>
-    <div class="gamelabel" id="pts">Points:</div>
-    <div class="glow" id="points">-</div>
+   <div class="statCon" id=lvlPtsCon>
+    <div class="gamelabel" id="lvlPts">Points:</div>
+    <div class="glow" id="lvlPoints">-</div>
   </div>
   </div>
   <div class="col-2">
@@ -35,8 +35,8 @@
   </div>
   <div class="col-2">
   <div class="statCon" id=clickCon>
-    <div class="gamelabel" id="clks">Clicks:</div>
-    <div class="glow" id="clicks">-</div>
+    <div class="gamelabel" id="lvlClks">Clicks:</div>
+    <div class="glow" id="lvlClicks">-</div>
   </div>
   </div> 
 </div>
@@ -106,26 +106,25 @@
 
 </div> -->
 
-<!-- The Non Bootstrap Modal -->
-<div id="nLC">
+<!-- The Non Bootstrap Next Modal -->
+<div id="nLC" hidden>
   <div id="nextLvlCon">  
       <div class="container" id="nextLvlMod">
         <div class="row">
           <div class="col-12">
-            <h2>
+            <h1>
               <div id="levelNum"></div>
-            </h2>
+            </h1>
           </div>
         </div>
-        <div class="row">       
-          <div class="col-3"><h3>Time left:</h3>
-            <h3><div id="tl"></div></h3><br></div>
-          <div class="col-3"><h3>Bonus Points:</h3>
-            <h3><div id="bp"></div></h3><br></div>
-          <div class="col-3"><h3>Total Points:</h3>
-            <h3><div id="tp"></div></h3><br> </div>
-          <div class="col-3"><h3>Total Clicks:</h3>
-            <h3><div id="tc"></div><br></h3></div>
+        <div class="row">     
+          <div class="col-2"><h3>Time left:</h3><h3><div id="tl"></div></h3><br></div>
+          <div class="col-2"><h3>Clicks:</h3><h3><div id="lc"></div><br></h3></div>
+          <div class="col-2"><h3>Penalty Balls:</h3><h3><div id="lm"></div><br></h3></div>   
+          <div class="col-2"><h3>Points:</h3><h3><div id="pts"></div></h3><br></div>
+          <div class="col-2"><h3>Bonus Points:</h3><h3><div id="lbp"></div></h3><br></div>
+          <div class="col-2"><h3>Level Points:</h3><h3><div id="lp"></div></h3><br></div>
+
         </div>
       </div><br>
       <div class="row">    
@@ -142,16 +141,44 @@
     </div>
 </div>
 
-<!-- The Modal -->
-<div id="overModal" class="modal">
+<!-- The Non Bootstrap Game Over Modal -->
+<div id="gOC" hidden>
+  <div id="gameOverCon">  
+      <div class="container" id="gameOverMod">
+        <div class="row">
+          <div class="col-12">
+            <h1>
+              <div>Game Over</div>
+            </h1>
+          </div>
+        </div>
+        <div class="row">     
+          <div class="col-2"><h3>Points:</h3><h3><div id="fpts"></div></h3><br></div>
+          <div class="col-2"><h3>Bonus:</h3><h3><div id="fbonus"></div></h3><br></div>
+          <div class="col-2"><h3>Level Total:</h3><h3><div id="flvlpts"></div></h3><br></div>
+          <div class="col-2"><h3>Clicks:</h3><h3><div id="fclicks"></div><br></h3></div>
+          <div class="col-2"><h3>Penalty Balls:</h3><h3><div id="fpen"></div><br></h3></div> 
+        </div>
+        <div class="row">
+          <div class="col-2"><h3>Total Points:</h3><h3><div id="gtPts"></div></h3><br></div>
+          <div class="col-2"><h3>Total Bonus:</h3><h3><div id="gtBonus"></div></h3><br></div>
+          <div class="col-2"><h3>Total Clicks:</h3><h3><div id="gtClicks"></div></h3><br></div>
+          <div class="col-2"><h3>Total Penalty:</h3><h3><div id="gtPen"></div></h3><br></div>       
+      </div><br>
+      <div class="row">    
+      <div class="col-2">
+         <button type="button" class="btn btn-danger" id="homeBtn" href="/home">Home</button>
+        
+      </div>
+      <div class="col-8">      
+      </div>
+      <div class="col-2">
+        <button type="button" class="btn btn-success" id="newBtn" href="/game">New Game</button>
+      </div>    
+      </div>
+    </div>
+</div>
 
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
-    <!-- Trigger/Close The Modal -->
-    <button id="clBtn" data-dismiss="modal">Start next level</button>
-  </div>
 
 </div>
 <div class="readyGo">
@@ -175,7 +202,7 @@
   <img id="girl1" src="/assets/img/dancers/girl1.gif">
 </div>
 
-<link rel="stylesheet" href="/css/disco.css">
+<!-- <link rel="stylesheet" href="/css/disco.css"> -->
 <!-- <link rel="stylesheet" href="/css/modal.css"> -->
 <!-- <script src="/js/inc/timer.js"></script> -->
 <!-- <script src="/js/inc/party.js"></script> -->

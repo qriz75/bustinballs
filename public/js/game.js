@@ -39,9 +39,17 @@ $(document).ready(function() {
   var level = initLvl;
   var points = 0;
   var total = 0;
+  var pointSum = 0;
   var totalPoints = [];
   var totalClicks = [];
-  var totalMisses =[];
+  var totalMisses = [];
+  var totalBonus = [];
+  var totalLvlPoints = [];
+  
+  var lvlPoints = 0;
+  var lvlBonus = 0;
+  var lvlClicks = 0;
+  var lvlMisses = 0;
 
   //time left
   var tl = 0;
@@ -64,9 +72,19 @@ $(document).ready(function() {
   //sound
   var pop = new Audio('/assets/sounds/pop.mp3')
   var miss = new Audio('/assets/sounds/miss.mp3')
-  var gameOver = new Audio('/assets/sounds/game_over.mp3')
-  var disco = $('#discosound')[0];
-
+  var gameOverSound = new Audio('/assets/sounds/game_over.mp3')
+  
+  var discoArray = [
+    "/assets/sounds/disco.mp3",
+    "/assets/sounds/song1.mp3",
+    "/assets/sounds/song2.mp3",
+    "/assets/sounds/song3.mp3",
+    "/assets/sounds/song4.mp3",
+    "/assets/sounds/song5.mp3"    
+  ]
+  
+  var disco = new Audio(discoArray[Math.floor(Math.random() * discoArray.length)]);
+  
   // how many circles at start
   var count = initBalls;
   var ballcount = 0;
@@ -196,7 +214,7 @@ $(document).ready(function() {
     }
   })
   
-    //Esc key to pause
+    //m key to toggle modal only for Dev
   window.addEventListener('keydown', function(e) {
     //var key = e.key;
     if (e.key === "m") // ESC key
@@ -206,6 +224,30 @@ $(document).ready(function() {
      
     }
   })
+  
+      //t key to shave off time only for Dev
+  window.addEventListener('keydown', function(e) {
+    //var key = e.key;
+    if (e.key === "t") // t key
+    {
+     
+     time = 5;
+       
+          $(this).html(time);       
+          update_time();
+       
+    }
+  })
+  
+        //o key to call Game Over only for Dev
+  window.addEventListener('keydown', function(e) {
+    //var key = e.key;
+    if (e.key === "o") // o key
+    {
+      forceOver();
+       
+    }
+  })
 
   // mouse click
   window.addEventListener('click', function(event) {
@@ -213,7 +255,8 @@ $(document).ready(function() {
       click.cx = event.x;
       click.cy = event.y;
       clicks = clicks + 1;
-      updateClicks();
+      lvlClicks = lvlClicks +1;
+      updateLvlClicks();
       update_monitor();
 
       //which circle
@@ -256,9 +299,9 @@ $(document).ready(function() {
   function hit() {
     circleArray.splice(ball, 1);
     ballcount = ballcount - 1;
-    total = total + (points * level);
+    lvlPoints = lvlPoints + (points * level);
     updateBallCt();
-    updatePoints();
+    updateLvlPoints();
     update_monitor()
     pop.play();
 
@@ -276,17 +319,47 @@ $(document).ready(function() {
   //function to finish the game
   function over() {
     if (time === 0) {
-      toggleActive();
+      togglePause();
       clearInterval(refreshInterval);
-      gameOver.play()
+      gameOverSound.play()
       circleArray = [];
-
+      toggleGameOver();
+      update_fpts();
+      update_fbonus();
+      update_flvlpts();
+      update_fclicks();
+      update_fpen();
+      update_gtPts();
+      update_gtClicks();
+      update_gtBonus();
+      update_gtPen();
       setTimeout(function() {
         //window.location.href = "/stats"; //will redirect to the stats page
       }, 3000); //will call the function after 3 secs.
     }
   }
 
+    //function to finish the game by buttonpress Dev only
+  function forceOver() {
+      togglePause();
+      clearInterval(refreshInterval);
+      gameOverSound.play()
+      circleArray = [];
+      toggleGameOver();
+      update_fpts();
+      update_fbonus();
+      update_flvlpts();
+      update_fclicks();
+      update_fpen();     
+      update_gtPts();
+      update_gtClicks();
+      update_gtBonus();
+      update_gtPen();
+      setTimeout(function() {
+        //window.location.href = "/stats"; //will redirect to the stats page
+      }, 3000); //will call the function after 3 secs.    
+  }
+  
   function complete() {
     togglePause();
     clearInterval(refreshInterval);
@@ -297,16 +370,30 @@ $(document).ready(function() {
     $('.dance').removeAttr('hidden');
     update_tl();
     calcBonus();
-    update_bp();
-    update_tc();
+    update_lbp();
+    update_lc();
     update_lvl();
-    update_tp();
+    update_lm();
+    update_lp();
+    update_pts();
+    totalPoints.push(lvlPoints);
+    totalClicks.push(lvlClicks);
+    totalMisses.push(lvlMisses);
+    var lvlTotal = lvlPoints + bonus;
+    totalLvlPoints.push(lvlTotal);
+    totalBonus.push(bonus);
     update_monitor()
     toggleModal();
-
-
+  }
+  
+  function gameOver(){
+    toggleGameOver();
   }
 
+  function refreshAudio(){
+    disco = new Audio(discoArray[Math.floor(Math.random() * discoArray.length)]);
+  }
+  
   function toggleActive() {
     if (running !== true) {
       running = true;
@@ -315,7 +402,7 @@ $(document).ready(function() {
     } else {
       running = false;
 
-      update_monitor()
+      update_monitor();
     }
   }
 
@@ -407,7 +494,7 @@ $(document).ready(function() {
       circleArray.push(new Circle(x, y, dx, dy, radius, points));
       ballcount = ballcount + 1;
       updateBallCt();
-      update_monitor()
+      update_monitor();
     }
   }
   //this function adds more circles to the canvas when the user mis-clicks
@@ -427,10 +514,12 @@ $(document).ready(function() {
       //pushing circles into the array
       circleArray.push(new Circle(x, y, dx, dy, radius));
       ballcount = ballcount + 1;
+      lvlMisses = lvlMisses + 1;
+      update_lm();
       updateBallCt();
       updateLevel();
       updatePom();
-      update_monitor()
+      update_monitor();
     }
 
   }
@@ -486,13 +575,22 @@ $(document).ready(function() {
 
 
 
-  // Update the display - Points
-  function updatePoints() {
-    $('#points').trigger('points-changed');
+//   // Update the display - Points
+//   function updatePoints() {
+//     $('#points').trigger('points-changed');
+//   }
+//   $(document).on('points-changed', '#points', function() {
+//     // do something after the div content has changed
+//     $('#points').text(total.toString());
+//   });
+  
+    // Update the display - Points
+  function updateLvlPoints() {
+    $('#lvlPoints').trigger('points-changed');
   }
-  $(document).on('points-changed', '#points', function() {
+  $(document).on('points-changed', '#lvlPoints', function() {
     // do something after the div content has changed
-    $('#points').text(total.toString());
+    $('#lvlPoints').text(lvlPoints.toString());
   });
 
 
@@ -516,12 +614,12 @@ $(document).ready(function() {
 
 
   // Update the display - CLicks
-  function updateClicks() {
-    $('#clicks').trigger('click-changed');
+  function updateLvlClicks() {
+    $('#lvlClicks').trigger('click-changed');
   }
-  $(document).on('click-changed', '#clicks', function() {
+  $(document).on('click-changed', '#lvlClicks', function() {
     // do something after the div content has changed
-    $('#clicks').text(clicks.toString());
+    $('#lvlClicks').text(lvlClicks.toString());
   });
 
   // Update the display - Penalty Spawn
@@ -553,33 +651,164 @@ $(document).ready(function() {
   });
 
   //Bonus Points
-  function update_bp() {
-    $('#bp').trigger('bp-changed');
+  function update_lbp() {
+    $('#lbp').trigger('lbp-changed');
   }
-  $(document).on('bp-changed', '#bp', function() {
+  $(document).on('lbp-changed', '#lbp', function() {
     // do something after the div content has changed
-    $('#bp').text(bonus.toString());
+    $('#lbp').text(bonus.toString());
   });
 
-  //Total Points
-  function update_tp() {
-    $('#tp').trigger('tp-changed');
+  //Level Points
+  function update_lp() {
+    $('#lp').trigger('lp-changed');
   }
-  $(document).on('tp-changed', '#tp', function() {
+  $(document).on('lp-changed', '#lp', function() {
     // do something after the div content has changed
-    $('#tp').text((total + bonus).toString());
+    $('#lp').text((lvlPoints + bonus).toString());
+  });
+  
+    //Points
+  function update_pts() {
+    $('#pts').trigger('pts-changed');
+  }
+  $(document).on('pts-changed', '#pts', function() {
+    // do something after the div content has changed
+    $('#pts').text(lvlPoints.toString());
   });
 
-  //Total Clicks
-  function update_tc() {
-    $('#tc').trigger('tc-changed');
+  //Level Clicks
+  function update_lc() {
+    $('#lc').trigger('lc-changed');
   }
-  $(document).on('tc-changed', '#tc', function() {
+  $(document).on('lc-changed', '#lc', function() {
     // do something after the div content has changed
-    $('#tc').text(clicks.toString());
+    $('#lc').text(lvlClicks.toString());
+  });
+  
+    //Level Misses
+  function update_lm() {
+    $('#lm').trigger('lm-changed');
+  }
+  $(document).on('lm-changed', '#lm', function() {
+    // do something after the div content has changed
+    $('#lm').text(lvlMisses.toString());
   });
 
 
+  //display GameOver Stats
+      //Level Points
+  function update_fpts() {
+    $('#fpts').trigger('fpts-changed');
+  }
+  $(document).on('fpts-changed', '#fpts', function() {
+    // do something after the div content has changed
+    
+    $.each(totalPoints, function(index, value ){
+      $('#fpts').append("Level "  + (index +1) + " : " + value + '<br>');
+    })   
+  });
+  
+        //Level Bonus
+  function update_fbonus() {
+    $('#fbonus').trigger('fbonus-changed');
+  }
+  $(document).on('fbonus-changed', '#fbonus', function() {
+    // do something after the div content has changed
+    
+    $.each(totalBonus, function(index, value ){
+      $('#fbonus').append("Level "  + (index +1) + " : " + value + '<br>');
+    })   
+  });
+  
+        //Level Clicks
+  function update_fclicks() {
+    $('#fclicks').trigger('fclicks-changed');
+  }
+  $(document).on('fclicks-changed', '#fclicks', function() {
+    // do something after the div content has changed
+    
+    $.each(totalClicks, function(index, value ){
+      $('#fclicks').append("Level "  + (index +1) + " : " + value + '<br>');
+    })   
+  });
+  
+        //Level Penalty
+  function update_fpen() {
+    $('#fpen').trigger('fpen-changed');
+  }
+  $(document).on('fpen-changed', '#fpen', function() {
+    // do something after the div content has changed
+    
+    $.each(totalMisses, function(index, value ){
+      $('#fpen').append("Level "  + (index +1) + " : " + value + '<br>');
+    })   
+  });
+  
+          //Level Sum
+  function update_flvlpts() {
+    $('#flvlpts').trigger('flvlpts-changed');
+  }
+  $(document).on('flvlpts-changed', '#flvlpts', function() {
+    // do something after the div content has changed
+    
+    $.each(totalLvlPoints, function(index, value ){
+      $('#flvlpts').append("Level "  + (index +1) + " : " + value + '<br>');
+    })   
+  });
+  
+            //Total Sum
+  function update_gtPts() {
+    $('#gtPts').trigger('gtPts-changed');
+  }
+  $(document).on('gtPts-changed', '#gtPts', function() {
+    // do something after the div content has changed
+    let sum = 0;
+    $.each(totalLvlPoints, function(index, value ){
+      sum = sum + value;           
+    })   
+    $('#gtPts').html(sum.toString());
+  });
+  
+              //Total Bonus
+  function update_gtBonus() {
+    $('#gtBonus').trigger('gtBonus-changed');
+  }
+  $(document).on('gtBonus-changed', '#gtBonus', function() {
+    // do something after the div content has changed
+    let sum = 0;
+    $.each(totalBonus, function(index, value ){
+      sum = sum + value;           
+    })   
+    $('#gtBonus').html(sum.toString());
+  });
+  
+              //Total Clicks
+  function update_gtClicks() {
+    $('#gtClicks').trigger('gtClicks-changed');
+  }
+  $(document).on('gtClicks-changed', '#gtClicks', function() {
+    // do something after the div content has changed
+    let sum = 0;
+    $.each(totalClicks, function(index, value ){
+      sum = sum + value;           
+    })   
+    $('#gtClicks').html(sum.toString());
+  });
+  
+                //Total Penalty
+  function update_gtPen() {
+    $('#gtPen').trigger('gtPen-changed');
+  }
+  $(document).on('gtPen-changed', '#gtPen', function() {
+    // do something after the div content has changed
+    let sum = 0;
+    $.each(totalClicks, function(index, value ){
+      sum = sum + value;           
+    })   
+    $('#gtPen').html(sum.toString());
+  });
+  
   // Display the Control Values ### Only in Dev Mode ###
   //Total Clicks
   function update_monitor() {
@@ -607,7 +836,7 @@ $(document).ready(function() {
     for (i = 0; i < time; i++) {
       temp = i;
       bonus = temp + bonus;
-      update_bp();
+      update_lbp();
     }
   }
 
@@ -640,7 +869,7 @@ function getReady( parent, callback ){
       // Also, return since we dont want this function to run anymore.
       clearInterval( interval );
       callback();
-      toggleModal();
+      
       startLvl();
       return;
 
@@ -713,12 +942,12 @@ getReady( document.getElementById("readyGo"), function(){
     time = 60;
     $('#timer').html(time);
     points = 0;
-    updatePoints();
+    updateLvlPoints();
     penCount = penCount * 2;
     updatePom();
     count = count * 2;
     clicks = 0;
-    updateClicks();
+    updateLvlClicks();
     disco.pause();
     update_monitor()
     $('.discoball').attr('hidden', true);
@@ -727,10 +956,19 @@ getReady( document.getElementById("readyGo"), function(){
     refreshInterval = setInterval(timer, 1000);    
 //     $('#nextModal').modal('toggle');
     toggleModal();
+    clearFields();
+    refreshAudio();
     startLvl();
 
   });
   
+  function clearFields(){
+    lvlPoints = 0;
+    updateLvlPoints();
+    lvlClicks = 0;
+    updateLvlClicks();
+    lvlMisses = 0;
+  }
   
   //Pseudo Modal 
   function toggleModal(){
@@ -738,6 +976,15 @@ getReady( document.getElementById("readyGo"), function(){
       $('#nLC').attr('hidden', false);
     }else if($('#nLC').is(":visible")){
       $('#nLC').attr('hidden', true);
+    }
+  }
+  
+    //Pseudo Modal 
+  function toggleGameOver(){
+    if($('#gOC').is(":hidden")){
+      $('#gOC').attr('hidden', false);
+    }else if($('#gOC').is(":visible")){
+      $('#gOC').attr('hidden', true);
     }
   }
   
@@ -749,6 +996,10 @@ getReady( document.getElementById("readyGo"), function(){
    //home button
   $("#homeBtn").click(function() {
     window.location = '/';
+  });
+     //home button
+  $("#newBtn").click(function() {
+    window.location = '/game';
   });
 
   
