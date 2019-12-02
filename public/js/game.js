@@ -83,6 +83,19 @@ $(document).ready(function() {
     "/assets/sounds/song5.mp3"    
   ]
   
+  var bgrArray = [
+    "/assets/img/bgr/bg1.jpg",
+    "/assets/img/bgr/bg2.jpg",
+    "/assets/img/bgr/bg3.jpg",
+    "/assets/img/bgr/bg4.jpg",
+    "/assets/img/bgr/bg5.jpg",
+    "/assets/img/bgr/bg6.jpg",
+    "/assets/img/bgr/bg7.jpg",
+    "/assets/img/bgr/bg8.jpg",
+    "/assets/img/bgr/bg9.jpg",
+    "/assets/img/bgr/bg10.jpg"    
+  ]
+  
   var disco = new Audio(discoArray[Math.floor(Math.random() * discoArray.length)]);
   
   // how many circles at start
@@ -803,7 +816,7 @@ $(document).ready(function() {
   $(document).on('gtPen-changed', '#gtPen', function() {
     // do something after the div content has changed
     let sum = 0;
-    $.each(totalClicks, function(index, value ){
+    $.each(totalMisses, function(index, value ){
       sum = sum + value;           
     })   
     $('#gtPen').html(sum.toString());
@@ -958,6 +971,7 @@ getReady( document.getElementById("readyGo"), function(){
     toggleModal();
     clearFields();
     refreshAudio();
+    selectBgr();
     startLvl();
 
   });
@@ -993,8 +1007,11 @@ getReady( document.getElementById("readyGo"), function(){
   
   });
   
-   //home button
+   //home buttons
   $("#homeBtn").click(function() {
+    window.location = '/';
+  });
+    $("#homeBtn2").click(function() {
     window.location = '/';
   });
      //home button
@@ -1002,7 +1019,10 @@ getReady( document.getElementById("readyGo"), function(){
     window.location = '/game';
   });
 
-  
+  function selectBgr(){
+    selectBG = bgrArray[Math.floor(Math.random() * bgrArray.length)];
+    document.body.style.backgroundImage = 'url(' + selectBG + ')';
+  }
   
   function callGetReady(){
     

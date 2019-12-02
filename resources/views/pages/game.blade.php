@@ -167,7 +167,7 @@
       </div><br>
       <div class="row">    
       <div class="col-2">
-         <button type="button" class="btn btn-danger" id="homeBtn" href="/home">Home</button>
+         <button type="button" class="btn btn-danger" id="homeBtn2" href="/home">Home</button>
         
       </div>
       <div class="col-8">      
